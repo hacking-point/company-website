@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hacking-point
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hacking-point
+  template:
+    metadata:
+      labels:
+        app: hacking-point
+    spec:
+      containers:
+        - name: hacking-point
+          image: vishal1307/hacking-point:0.1
+          ports:
+            - containerPort: 2345
+          env:
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: MONGO_HOST
+
+            - name: MONGO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: MONGO_PORT
+
+            - name: PORT
+              value: "2345"
+            - name: MONGO_URL
+              value: "mongodb://service-mongo-db:27017/hacking-point"
+            - name: PRIVATE_KEY
+              value: "abdakjfajdfdjfjdnjdnjfnjfnvjfnvfjfmdmkdsm"
+            - name: OWN_MAIL_HOST
+              value: "mail.hackingpoint.com"
+            - name: OWN_MAIL_PORT
+              value: "465"
+            - name: OWN_MAIL_USER
+              value: "backend@rogernreckon.com"
+            - name: OWN_MAIL_PASS
+              value: "code@tuff43"
+            - name: GMAIL_USER
+              value: "gaurav.raj459@gmail.com"
+            - name: GMAIL_PASS
+              value: "hfifmwwefapifmbd"
+            - name: RAZOR_ID
+              value: "rzp_test_cG9JEfzqtN8sMC"
+            - name: RAZOR_SECRET
+              value: "lB4Wv8KE8swXQf3pJdaLEWLf"
+            - name: GOOGLE_CLIENT_ID
+              value: "41794878886-gjkgn677nbg5s7c28hja7c942emq7lo7.apps.googleusercontent.com"
+            - name: GOOGLE_CLIENT_SECRET
+              value: "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"
+            - name: GITHUB_CLIENT_ID
+              value: "Ov23liCChl8wQNW5BRD4"
+            - name: GITHUB_CLIENT_SECRET
+              value: "39ab9fc7d5afdb8baec71b2394eb5d588a84f179"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-hacking-point
+spec:
+  selector:
+    app: hacking-point
+  ports:
+    - port: 2345
+      targetPort: 2345
+  type: LoadBalancer

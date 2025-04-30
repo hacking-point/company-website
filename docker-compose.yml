@@ -1,0 +1,57 @@
+# version: '3.8'
+
+# services:
+#   app:
+#     image: vishal1307/hacking-point
+#     build: .
+#     container_name: hacking-point-app
+#     ports:
+#       - "${PORT}:${PORT}"
+#     env_file: 
+#       - .env
+#     volumes:
+#       - .:/app
+#     depends_on:
+#       - db
+
+#   db:
+#     image: mongo:6
+#     container_name: hacking-point-db
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
+version: '3.8'
+
+services:
+  backend:
+    image: vishal1307/hacking-point:0.1
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "2345:2345"
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
