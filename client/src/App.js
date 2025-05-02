@@ -1,24 +1,23 @@
-import logo from './logo.svg';
+
 import './App.css';
+import AllRoute from './routes/routes';
+import { ThreeDBotton } from './components/Button';
+import AnimatedInput from './components/AnimatedInput';
+import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
+import ProductCard from './components/ProductCard';
+import ProductShowcase from './components/ProductDetail';
 
 function App() {
+  function onClick(val){
+    console.log(val)
+
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      
+      <AllRoute/>
+    </>
   );
 }
 
