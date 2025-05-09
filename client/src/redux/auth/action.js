@@ -31,3 +31,7 @@ export const postRegisterData=(payload)=>(dispatch)=>{
     dispatch(addRegisterRequest())
     axios.post("/auth/register",payload).then((res)=>dispatch(addRegisterSuccess(res.data))).catch((err)=>dispatch(addRegisterFailure(err.response.data)))
 }
+export const postLoginData=(payload)=>(dispatch)=>{
+    dispatch(addLoginRequest())
+    axios.post("/auth/login",payload).then((res)=>dispatch(addLoginSuccess(res.data))).catch((err)=>dispatch(addLoginFailure(err.response.data)))
+}

@@ -16,12 +16,59 @@ import {
   HStack,
   Icon,
   Tooltip,
+  InputGroup,
+  InputRightElement,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa"
+import { FaGithub } from "react-icons/fa";
+import { useEffect, useReducer, useState } from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useDispatch, useSelector } from "react-redux";
 
+const initState = {
+  email: "",
+  password: "",
+};
+const reducer = (store, { type, payload }) => {
+  switch (type) {
+    case "email":
+      return { ...store, email: payload };
+    case "password":
+      return { ...store, password: payload };
+
+    default:
+      return { ...store };
+  }
+};
 export const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [text, setText] = useReducer(reducer, initState);
+  const [localError, setLocalError] = useState(null);
+  const [localSuccess, setLocalSuccess] = useState(null);
+  const { isLoading, isError,data } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const handleSubmit = () => {
+    console.log(text);
+  };
+  useEffect(() => {
+    if (isError) {
+      setLocalError(isError);
+
+      const timer = setTimeout(() => setLocalError(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
+  useEffect(()=>{
+     if(data){
+        setLocalSuccess()
+        const timer=setTimeout(()=>setLocalSuccess(null),100)
+        return ()=>clearTimeout(timer)
+     }
+
+  },[data])
   return (
     <Flex
       minH={"100vh"}
@@ -43,13 +90,39 @@ export const Login = () => {
           p={8}
         >
           <Stack spacing={4}>
+            {localError && (
+              <Alert status="error" borderRadius="md">
+                <AlertIcon />
+                {typeof localError === "string"
+                  ? localError
+                  : "Something went wrong"}
+              </Alert>
+            )}
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                onChange={(e) =>
+                  setText({ type: "email", payload: e.target.value })
+                }
+              />
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <InputGroup>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  onChange={(e) =>
+                    setText({ type: "password", payload: e.target.value })
+                  }
+                />
+                <InputRightElement
+                  cursor={"pointer"}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
             <Stack spacing={10}>
               <Stack
@@ -58,7 +131,9 @@ export const Login = () => {
                 justify={"space-between"}
               >
                 <Checkbox>Remember me</Checkbox>
-                <Text color={"blue.400"}>Forgot password?</Text>
+                <Link to={"/auth/forgotpassword"}>
+                  <Text color={"blue.400"}>Forgot password?</Text>
+                </Link>
               </Stack>
               <Button
                 bg={"blue.400"}
@@ -66,6 +141,7 @@ export const Login = () => {
                 _hover={{
                   bg: "blue.500",
                 }}
+                onClick={handleSubmit}
               >
                 Sign in
               </Button>
@@ -80,31 +156,29 @@ export const Login = () => {
                 </Link>
               </Text>
             </Stack>
-            <HStack justify={'center'} align={'center'} spacing={4}>
+            <HStack justify={"center"} align={"center"} spacing={4}>
               <Tooltip label="Login with Gmail " hasArrow placement="top">
-
-              <Icon
-                as={FcGoogle}
-                boxSize="10"
-                cursor="pointer"
-                transition="transform 0.3s"
-                _hover={{ transform: "scale(1.1)" }}
-                borderRadius="md"
-                boxShadow="0 4px 10px rgba(0, 0, 0, 0.2)"
+                <Icon
+                  as={FcGoogle}
+                  boxSize="10"
+                  cursor="pointer"
+                  transition="transform 0.3s"
+                  _hover={{ transform: "scale(1.1)" }}
+                  borderRadius="md"
+                  boxShadow="0 4px 10px rgba(0, 0, 0, 0.2)"
                 />
               </Tooltip>
               <Tooltip label="Login with github" hasArrow placement="top">
-
-              <Icon
-                as={FaGithub}
-                boxSize="10"
-                cursor="pointer"
-                transition="transform 0.3s"
-                _hover={{ transform: "scale(1.1)" }}
-                borderRadius="md"
-                boxShadow="0 4px 10px rgba(0, 0, 0, 0.2)"
+                <Icon
+                  as={FaGithub}
+                  boxSize="10"
+                  cursor="pointer"
+                  transition="transform 0.3s"
+                  _hover={{ transform: "scale(1.1)" }}
+                  borderRadius="md"
+                  boxShadow="0 4px 10px rgba(0, 0, 0, 0.2)"
                 />
-                </Tooltip>
+              </Tooltip>
             </HStack>
           </Stack>
         </Box>
