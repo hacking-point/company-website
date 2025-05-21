@@ -28,7 +28,7 @@ version: '3.8'
 
 services:
   backend:
-    image: vishal1307/hacking-point:0.1
+    image: vishal1307/hacking-point:0.2
     build: ./backend
     env_file:
       - ./backend/.env
